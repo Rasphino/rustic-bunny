@@ -1,13 +1,10 @@
 pub mod utils;
-use actix_web::{
-    web, App, HttpResponse, HttpServer, Responder,
-    http::header
-};
+use actix_web::{http::header, web, App, HttpResponse, HttpServer, Responder};
 use serde_derive::Deserialize;
 
 #[derive(Deserialize)]
 pub struct SearchRequest {
-    cmd: String
+    cmd: String,
 }
 
 async fn index() -> impl Responder {
@@ -20,7 +17,7 @@ async fn search(web::Query(cmd): web::Query<SearchRequest>) -> impl Responder {
     let redirect_url = match command {
         "tw" => String::from("https://twitter.com"),
         "gh" => utils::github::construct_github_url(&cmd),
-        _ => utils::google::construct_google_search_url(&cmd)
+        _ => utils::google::construct_google_search_url(&cmd),
     };
 
     HttpResponse::TemporaryRedirect()
